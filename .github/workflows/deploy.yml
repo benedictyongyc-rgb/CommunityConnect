@@ -20,3 +20,4 @@ jobs:
           exclude: |
             **/.git*
             **/deploy.bat
+            **/README.md
