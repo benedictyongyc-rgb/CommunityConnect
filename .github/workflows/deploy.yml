@@ -16,3 +16,7 @@ jobs:
           password: ${{ secrets.FTP_PASS }}
           local-dir: ./
           server-dir: /htdocs
+          dangerous-clean-slate: false
+          exclude: |
+            **/.git*
+            **/deploy.bat
