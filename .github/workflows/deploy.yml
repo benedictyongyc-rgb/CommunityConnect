@@ -17,7 +17,3 @@ jobs:
           local-dir: ./
           server-dir: /htdocs
           dangerous-clean-slate: false
-          exclude: |
-            **/.git*
-            **/deploy.bat
-            **/README.md
