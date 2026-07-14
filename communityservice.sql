@@ -1,0 +1,79 @@
+CREATE DATABASE IF NOT EXISTS CommunityServiceDB;
+
+USE CommunityServiceDB;
+
+CREATE TABLE Volunteer
+(
+	Volunteer_Id VARCHAR(10) PRIMARY KEY,
+	Password VARCHAR(255) NOT NULL,
+	Name VARCHAR(50) NOT NULL,
+	Birthdate DATE NOT NULL,
+	Email VARCHAR(40) NOT NULL UNIQUE,
+	Occupation VARCHAR(50) NOT NULL,
+	ContactNo VARCHAR(15) NOT NULL
+);
+
+CREATE TABLE Manager
+(
+	Manager_Id VARCHAR(10) PRIMARY KEY,
+	Password VARCHAR(255) NOT NULL,
+	Name VARCHAR(50) NOT NULL,
+	Email VARCHAR(40) NOT NULL UNIQUE,
+	CreationDate DATE NOT NULL
+);
+
+CREATE TABLE CommunityEvent
+(
+	Event_Id VARCHAR(10) PRIMARY KEY,
+	Manager_Id VARCHAR(10) NOT NULL,
+	Type VARCHAR(50) NOT NULL,
+	Title VARCHAR(100) NOT NULL,
+	Description TEXT NOT NULL,
+	Venue VARCHAR(100) NOT NULL,
+	StartTime DATETIME NOT NULL,
+	EndTime DATETIME NOT NULL,
+	Num_of_Vol INT NOT NULL,
+	Image_Path VARCHAR(255),
+	Created_At TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	Updated_At TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+	
+	CONSTRAINT FK_Event_Manager
+		FOREIGN KEY (Manager_Id)
+		REFERENCES Manager(Manager_Id)
+);
+
+DROP TABLE IF EXISTS ServiceLikes;
+
+CREATE TABLE ServiceLikes (
+    Like_Id VARCHAR(10) PRIMARY KEY,
+    Volunteer_Id VARCHAR(10) NOT NULL,
+    Event_Id VARCHAR(10) NOT NULL,
+    Created_At TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE KEY unique_like (Volunteer_Id, Event_Id),
+    FOREIGN KEY (Volunteer_Id) REFERENCES Volunteer(Volunteer_Id) ON DELETE CASCADE,
+    FOREIGN KEY (Event_Id) REFERENCES CommunityEvent(Event_Id) ON DELETE CASCADE
+);
+CREATE TABLE Application
+(
+	Application_Id VARCHAR(10) PRIMARY KEY,
+	Volunteer_Id VARCHAR(10) NOT NULL,
+	Event_Id VARCHAR(10) NOT NULL,
+	Apply_Date DATE NOT NULL,
+	Status CHAR(1) NOT NULL DEFAULT 'N',
+	Status_Change_By VARCHAR(10),
+	Status_Change_Date DATE,
+	Reason VARCHAR(255) NOT NULL,
+	Reject_Reason VARCHAR(255),
+
+	CONSTRAINT FK_Application_Volunteer
+		FOREIGN KEY (Volunteer_Id)
+		REFERENCES Volunteer(Volunteer_Id),
+
+	CONSTRAINT FK_Application_Event
+		FOREIGN KEY (Event_Id)
+		REFERENCES CommunityEvent(Event_Id),
+
+	CONSTRAINT FK_Application_Manager
+		FOREIGN KEY (Status_Change_By)
+		REFERENCES Manager(Manager_Id)
+);
