@@ -8,6 +8,21 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+
+      # Debug step to check if secrets are being read
+      - name: Debug secrets
+        run: |
+          if [ -z "${{ secrets.FTP_USER }}" ]; then
+            echo "❌ FTP_USER is EMPTY"
+          else
+            echo "✅ FTP_USER is set (length: ${#{{ secrets.FTP_USER }}})"
+          fi
+          if [ -z "${{ secrets.FTP_PASS }}" ]; then
+            echo "❌ FTP_PASS is EMPTY"
+          else
+            echo "✅ FTP_PASS is set (length: ${#{{ secrets.FTP_PASS }}})"
+          fi
+
       - name: FTP Deploy
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
         with:
